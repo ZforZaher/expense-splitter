@@ -11,7 +11,7 @@ describe('splitBill', () => {
   })
 
   it('splits a 15% tip between two people', () => {
-    expect(splitBill(80, 15, 2)).toBe(45)
+    expect(splitBill(80, 15, 2)).toBe(46)
   })
 
   it('rounds to 2 decimals', () => {
