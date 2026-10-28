@@ -41,6 +41,9 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment: production
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Get build output
         uses: actions/download-artifact@v8
@@ -48,12 +51,15 @@ jobs:
           name: site
           path: dist/
 
-      # --no-build: deploy the exact dist that CI tested instead of rebuilding
-      - name: Deploy to Netlify (production)
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: npx --yes netlify-cli@27 deploy --dir=dist --prod --no-build
+      # Wrap the tested dist as a prebuilt Vercel output so Vercel deploys it without rebuilding
+      - name: Package build for Vercel
+        run: |
+          mkdir -p .vercel/output/static
+          cp -r dist/. .vercel/output/static/
+          echo '{"version":3}' > .vercel/output/config.json
+
+      - name: Deploy to Vercel (production)
+        run: npx --yes vercel@65 deploy --prebuilt --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
 
   deploy-preview:
     needs: ci
@@ -62,6 +68,9 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Get build output
         uses: actions/download-artifact@v8
@@ -69,14 +78,18 @@ jobs:
           name: site
           path: dist/
 
-      - name: Deploy preview to Netlify
-        id: preview
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Package build for Vercel
         run: |
-          npx --yes netlify-cli@27 deploy --dir=dist --no-build --alias=pr-${{ github.event.pull_request.number }} --json > deploy.json
-          echo "url=$(jq -r '.deploy_url' deploy.json)" >> "$GITHUB_OUTPUT"
+          mkdir -p .vercel/output/static
+          cp -r dist/. .vercel/output/static/
+          echo '{"version":3}' > .vercel/output/config.json
+
+      # Without --prod this is a preview deploy; the CLI prints its URL on stdout
+      - name: Deploy preview to Vercel
+        id: preview
+        run: |
+          url=$(npx --yes vercel@65 deploy --prebuilt --yes --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Comment the preview link
         env:

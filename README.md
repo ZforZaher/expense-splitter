@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/ZforZaher/expense-splitter/actions/workflows/ci.yml/badge.svg)](https://github.com/ZforZaher/expense-splitter/actions/workflows/ci.yml)
 
-**Live site:** <!-- TODO: https://YOUR-SITE.netlify.app -->
+**Live site:** <!-- TODO: https://YOUR-PROJECT.vercel.app -->
 
 A small React app that splits a bill, tip included, between any number of people.
 
@@ -21,7 +21,7 @@ flowchart LR
 ```
 
 - **Every pull request** runs `npm ci`, lint, tests with an 80% coverage gate, and a production build in GitHub Actions.
-- **Passing pull requests** get their own Netlify preview URL, posted as a comment on the pull request. Production is never touched.
+- **Passing pull requests** get their own Vercel preview URL, posted as a comment on the pull request. Production is never touched.
 - **Merging to `main`** runs the same checks again, then deploys to production. Nothing reaches the live site without passing CI.
 - **The deploy jobs reuse the build artifact** from the CI job, so the site that goes live is the exact build that was tested.
 - **npm dependencies are cached** between runs by `actions/setup-node`.
@@ -61,4 +61,4 @@ npm run dev       # start the dev server
 npm run coverage  # run tests with the coverage gate
 ```
 
-Secrets (`NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID`) live only in GitHub Actions secrets and are never committed.
+Secrets (`VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`) live only in GitHub Actions secrets and are never committed.
