@@ -47,7 +47,7 @@ Measured from this repo's GitHub Actions runs:
 
 | Measure | Value |
 | --- | --- |
-| Tests | 10 (4 unit, 6 component) |
+| Tests | 10 (5 unit, 5 component) |
 | Coverage | 97% lines, 100% branches, 92% functions, 97% statements |
 | `ci` job (install, lint, test, build) | 13-17 s |
 | Preview deploy | ~30 s from green `ci` to a comment with the URL |
