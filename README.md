@@ -2,9 +2,9 @@
 
 [![CI](https://github.com/ZforZaher/expense-splitter/actions/workflows/ci.yml/badge.svg)](https://github.com/ZforZaher/expense-splitter/actions/workflows/ci.yml)
 
-**Live site:** <!-- TODO: https://YOUR-PROJECT.vercel.app -->
+**Live site:** https://expense-splitter-one-flame.vercel.app
 
-A small React app that splits a bill, tip included, between any number of people.
+A small React app that splits a bill, tip included, between any number of people. The app is deliberately simple: the CI/CD pipeline around it is the real project.
 
 ![Expense Splitter screenshot](docs/screenshot.png)
 
@@ -43,13 +43,16 @@ A pull request with a failing test cannot be merged:
 
 ## Results
 
-<!-- TODO: fill in from the "Install dependencies" step of two CI runs -->
+Measured from this repo's GitHub Actions runs:
 
 | Measure | Value |
 | --- | --- |
-| `npm ci` without cache | _X s_ |
-| `npm ci` with cache | _Y s_ |
-| Test coverage (lines) | _Z %_ |
+| Tests | 10 (4 unit, 6 component) |
+| Coverage | 97% lines, 100% branches, 92% functions, 97% statements |
+| `ci` job (install, lint, test, build) | 13-17 s |
+| Preview deploy | ~30 s from green `ci` to a comment with the URL |
+| Production deploy | ~26 s from green `ci` to live |
+| `npm ci` | 2-3 s with or without the npm cache. The dependency tree is small, so caching saves about 1 s, within GitHub's whole-second step timing |
 
 ## Run it locally
 
