@@ -28,3 +28,5 @@ coverage
 
 # Claude
 .claude/
+# Vercel CLI link folder
+.vercel
